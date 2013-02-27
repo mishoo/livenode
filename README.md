@@ -6,7 +6,7 @@ statements in a live NodeJS program, without restarting the server.
 This way I can introduce new functions/variables, or redefine existing
 ones, and immediately test without losing any context.
 
-See my [blog post](http://lisperator.net/livenode-live-code-your-nodejs-application/)
+See my [blog post](http://lisperator.net/blog/livenode-live-code-your-nodejs-application/)
 and [screencast](http://vimeo.com/60636079).
 
 I've been using it for a week and am quite satisfied with it, but it's
