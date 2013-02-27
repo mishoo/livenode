@@ -1,0 +1,16 @@
+{
+    "author": {
+        "name": "Mihai Bazon",
+        "email": "mihai.bazon@gmail.com",
+        "url": "http://lisperator.net/"
+    },
+    "name": "livenode",
+    "description": "Inject code into the living process",
+    "version": "0.0.1",
+    "main": "./livenode.js",
+
+    "dependencies": {
+        "uglify-js": "~2.2.5",
+        "ws": "~0.4.25"
+    }
+}
