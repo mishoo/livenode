@@ -104,7 +104,9 @@ var WS_Connection = (function(){
 
             if (!has_trap) {
                 process.on("uncaughtException", function(err){
+                    console.log(err);
                     if (err instanceof Error) {
+                        console.log(err.stack);
                         err = err.toString();
                     }
                     clients.forEach(function(socket){
