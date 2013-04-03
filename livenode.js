@@ -239,7 +239,8 @@ function rewrite_globals(code, ctx) {
             && node.left instanceof u2.AST_Dot
             && node.left.expression instanceof u2.AST_SymbolRef
             && node.left.expression.name == "exports"
-            && !in_context(node.left.expression))
+            && !in_context(node.left.expression)
+            && node.right instanceof u2.AST_SymbolRef)
         {
             descend(node, this);
 
