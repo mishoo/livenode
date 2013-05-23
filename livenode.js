@@ -89,6 +89,32 @@ var WS_Connection = (function(){
             ws.send(JSON.stringify([ id, "error", ex ], null, 4));
         }
     };
+
+    function send_all(data) {
+        var msg = JSON.stringify(data, null, 4);
+        clients.forEach(function(ws){
+            ws.send(msg);
+        });
+    };
+
+    global.Livenode = {
+        catch_errors: function(f) {
+            return function() {
+                try {
+                    return f.apply(this, arguments);
+                }
+                catch(err) {
+                    console.log(err);
+                    if (err instanceof Error) {
+                        console.log(err.stack);
+                        err = err.toString();
+                    }
+                    send_all([ 0, "error", err ]);
+                }
+            }
+        }
+    };
+
     return {
         handler: function(ws) {
             sys.error("Livenode client connected");
@@ -109,9 +135,7 @@ var WS_Connection = (function(){
                         console.log(err.stack);
                         err = err.toString();
                     }
-                    clients.forEach(function(socket){
-                        socket.send(JSON.stringify([ 0, "error", err ]));
-                    });
+                    send_all([ 0, "error", err ]);
                 });
                 has_trap = true;
             }
@@ -143,10 +167,12 @@ function get_info(code, pos) {
     } catch(ex) {
         if (ex !== exit) throw ex;
     }
+    ast.figure_out_scope({ screw_ie: true });
     return {
-        path: path,
-        node: best_node,
-        prev_stat: prev_stat
+        ast       : ast,
+        path      : path,
+        node      : best_node,
+        prev_stat : prev_stat,
     };
 };
 
@@ -158,13 +184,13 @@ function rewrite_globals(code, ctx) {
         });
     } else {
         ast = u2.parse(code);
+        ast.figure_out_scope({ screw_ie: true });
     }
-    ast.figure_out_scope({ screw_ie: true });
     var hoisted = [];
     var warnings = [];
     function in_context(sym) {
         if (ctx) {
-            return sym.name in ctx;
+            return sym.global() && sym.name in ctx;
         } else {
             return sym.global() && !sym.undeclared();
         }
